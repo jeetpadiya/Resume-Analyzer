@@ -5,22 +5,19 @@ import { parseResumeFile } from "../services/parser/parser_service.js"
 export const uploadResume = async (req: any, res: any) => {
   try {
     const file = req.file;
-    console.log("FILE:", req.file);
-    console.log("BUFFER TYPE:", typeof file.buffer);
-console.log("BUFFER LENGTH:", file.buffer?.length);
 
     if (!file) {
       return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    if (!req.user?.id) {
+      return res.status(401).json({ message: "Invalid token payload" });
     }
 
     const parsedData = await parseResumeFile(
       file.buffer,
       file.mimetype
     );
-
-    console.log(parsedData); // DEBUG
-console.log("BUFFER TYPE:", typeof file.buffer);
-console.log("BUFFER LENGTH:", file.buffer?.length);
 
     const resume = await Resume.create({
       user: req.user.id,

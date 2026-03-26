@@ -83,6 +83,18 @@ const Dashboard = () => {
     }
   };
 
+
+  const handleClear = () => {
+    setFile(null);
+    setJobDescription("");
+    setResult(null);
+    setResume("");
+    setUploadStatus("idle");
+    if(fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   const canUpload = !!file && uploadStatus !== "success";
   const canAnalyze = !!resume && !!jobDescription && !loading;
 
@@ -140,7 +152,7 @@ const Dashboard = () => {
                     </svg>
                   </div>
                   <p className="dash-dropzone-label">Click to select your resume</p>
-                  <p className="dash-dropzone-sub">PDF or DOCX — max 10MB</p>
+                  <p className="dash-dropzone-sub">PDF or DOCX — max 2MB</p>
                 </>
               )}
             </div>
@@ -172,6 +184,9 @@ const Dashboard = () => {
                   </svg>
                   Upload Resume
                 </>}
+              </button>
+              <button onClick={handleClear} className="dash-btn dash-btn-upload" disabled={uploadLoading}>
+                Clear
               </button>
             </div>
           </div>

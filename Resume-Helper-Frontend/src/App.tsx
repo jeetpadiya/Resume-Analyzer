@@ -5,6 +5,8 @@ import ProtectedRoutes from './routes/ProtectedRoutes'
 
 import Login from './pages/Login'
 import SignUp from './pages/SignUp'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 
 function App() {
   const token = localStorage.getItem("token");
@@ -26,6 +28,8 @@ function App() {
         <Route element={<PublicRoutes />}>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
         </Route>
 
         <Route element={<ProtectedRoutes />} >

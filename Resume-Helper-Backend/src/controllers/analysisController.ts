@@ -6,11 +6,18 @@ export const analyzeResume = async (req: any, res: any) => {
   try {
     const { resumeId, jobDescription } = req.body;
 
-    const resume = await Resume.findById(resumeId);
+    if (!req.user?.id) {
+      return res.status(401).json({ message: "Invalid token payload" });
+    }
+
+    const resume = await Resume.findOne({
+      _id: resumeId,
+      user: req.user.id,
+    });
 
     if (!resume || !resume.parsedData) {
-      return res.status(400).json({
-        message: "Resume not parsed yet",
+      return res.status(404).json({
+        message: "Resume not found or not accessible",
       });
     }
 

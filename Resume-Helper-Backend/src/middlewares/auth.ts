@@ -1,5 +1,12 @@
 import jwt from 'jsonwebtoken';
 
+type AuthTokenPayload = {
+    id: string;
+    email: string;
+    iat?: number;
+    exp?: number;
+};
+
 export const authMiddleware = (req:any,res:any,next:any)=>{
     const token = req.header('Authorization')?.replace('Bearer ', '');
 
@@ -11,7 +18,12 @@ export const authMiddleware = (req:any,res:any,next:any)=>{
         if (!process.env.SECRET_KEY) {
             throw new Error("SECRET_KEY is not defined");
         }
-        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        const decoded = jwt.verify(token, process.env.SECRET_KEY) as AuthTokenPayload;
+
+        if (!decoded.id) {
+            return res.status(401).json({ message: "Invalid token payload" });
+        }
+
         req.user = decoded;
         next();
     }
@@ -20,4 +32,3 @@ export const authMiddleware = (req:any,res:any,next:any)=>{
         return res.status(401).json({ message: "Invalid token" });
     }
 }
-
