@@ -15,7 +15,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "https://resume-analyzer-seven-gamma.vercel.app",
   process.env.FRONTEND_URL,
-  process.env.CORS_ORIGIN,
+  process.env.CORS_ORIGIN, 
 ]
   .filter(Boolean)
   .map((origin) => origin!.replace(/\/$/, ""));
