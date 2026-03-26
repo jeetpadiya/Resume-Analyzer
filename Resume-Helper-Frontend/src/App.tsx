@@ -7,6 +7,7 @@ import Login from './pages/Login'
 import SignUp from './pages/SignUp'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import ResumeHistory from './pages/ResumeHistory'
 
 function App() {
   const token = localStorage.getItem("token");
@@ -34,6 +35,7 @@ function App() {
 
         <Route element={<ProtectedRoutes />} >
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/history" element={<ResumeHistory />} />
         </Route>
 
         {/* optional fallback */}

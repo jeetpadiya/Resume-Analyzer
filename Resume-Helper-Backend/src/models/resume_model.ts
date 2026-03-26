@@ -16,6 +16,7 @@ const resumeSchema = new mongoose.Schema(
     },
 
     fileUrl: { type: String, required: true },
+    originalFileName: { type: String },
 
     parsedData: {
       skills: [{ type: String }],

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import "../styles/Navigation.css";
 
@@ -29,6 +29,11 @@ const Navigation = () => {
     ? user.name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2)
     : "U";
 
+  const navItems = [
+    { to: "/dashboard", label: "Analyze" },
+    { to: "/history", label: "My Resumes" },
+  ];
+
   return (
     <>
       
@@ -46,6 +51,18 @@ const Navigation = () => {
               </svg>
             </div>
             <span className="nav-logo-text">Resume<span>Analyzer</span></span>
+          </div>
+
+          <div className="nav-links">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+              >
+                {item.label}
+              </NavLink>
+            ))}
           </div>
 
           {/* Right: User */}

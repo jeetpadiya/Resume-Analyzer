@@ -56,3 +56,40 @@ export const analyzeResume = async (req: any, res: any) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+export const getResumeAnalysis = async (req: any, res: any) => {
+  try {
+    const { resumeId } = req.params;
+
+    if (!req.user?.id) {
+      return res.status(401).json({ message: "Invalid token payload" });
+    }
+
+    const resume = await Resume.findOne({
+      _id: resumeId,
+      user: req.user.id,
+    });
+
+    if (!resume) {
+      return res.status(404).json({
+        message: "Resume not found or not accessible",
+      });
+    }
+
+    const analysis = await Analysis.findOne({ resume: resume._id })
+      .sort({ createdAt: -1 });
+
+    if (!analysis) {
+      return res.status(404).json({
+        message: "No analysis found for this resume",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: analysis,
+    });
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+};

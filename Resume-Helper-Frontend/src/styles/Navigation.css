@@ -20,6 +20,7 @@
           display: flex;
           align-items: center;
           justify-content: space-between;
+          gap: 18px;
         }
 
         /* Logo */
@@ -47,6 +48,33 @@
         }
         .nav-logo-text span {
           color: #a48fff;
+        }
+
+        .nav-links {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-left: auto;
+          margin-right: 8px;
+        }
+        .nav-link {
+          color: rgba(255,255,255,0.45);
+          text-decoration: none;
+          font-size: 13px;
+          padding: 9px 14px;
+          border-radius: 999px;
+          border: 1px solid transparent;
+          transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+        }
+        .nav-link:hover {
+          color: #f0eeff;
+          background: rgba(255,255,255,0.04);
+        }
+        .nav-link.active {
+          color: #f0eeff;
+          background: rgba(108,71,255,0.14);
+          border-color: rgba(164,143,255,0.18);
+          box-shadow: 0 0 0 1px rgba(255,255,255,0.03) inset;
         }
 
         /* Right side */
@@ -177,3 +205,26 @@
 
         .nav-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 4px 0;
          }
+
+        @media (max-width: 760px) {
+          .nav-inner {
+            padding: 0 16px;
+            flex-wrap: wrap;
+            height: auto;
+            min-height: 60px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+          }
+
+          .nav-links {
+            order: 3;
+            width: 100%;
+            margin: 0;
+            overflow-x: auto;
+            padding-bottom: 2px;
+          }
+
+          .nav-link {
+            white-space: nowrap;
+          }
+        }
