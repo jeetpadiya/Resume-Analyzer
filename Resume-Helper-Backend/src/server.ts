@@ -12,19 +12,25 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const allowedOrigins = [
-  'http://localhost:5173',
-  'https://resume-analyzer-seven-gamma.vercel.app'  
+  "http://localhost:5173",
+  "https://resume-analyzer-seven-gamma.vercel.app",
+  process.env.FRONTEND_URL,
+  process.env.CORS_ORIGIN,
 ]
+  .filter(Boolean)
+  .map((origin) => origin!.replace(/\/$/, ""));
 
 app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
+
+    const normalizedOrigin = origin.replace(/\/$/, "");
+
+    if (allowedOrigins.includes(normalizedOrigin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error(`Not allowed by CORS: ${origin}`));
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
