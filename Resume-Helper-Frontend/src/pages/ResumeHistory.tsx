@@ -3,6 +3,11 @@ import API from "../service/api";
 import Navigation from "../components/Navigation";
 import type { AnalysisResult, ResumeHistoryItem } from "../type/types";
 import "../styles/ResumeHistory.css";
+import { MdDelete } from "react-icons/md";
+import { MdEditDocument } from "react-icons/md";
+import RenamePopup from "../Popups/RenamePopup";
+
+
 
 const ScoreRing = ({ score }: { score: number }) => {
   const radius = 38;
@@ -47,6 +52,9 @@ const ResumeHistory = () => {
   const [listLoading, setListLoading] = useState(true);
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [listError, setListError] = useState("");
+  const [isRenamePopupOpen, setIsRenamePopupOpen] = useState(false);
+  const [editingResume, setEditingResume] = useState<ResumeHistoryItem | null>(null);
+  const [renameLoading, setRenameLoading] = useState(false);
   const [detailsError, setDetailsError] = useState("");
 
   useEffect(() => {
@@ -100,6 +108,72 @@ const ResumeHistory = () => {
     fetchAnalysis();
   }, [selectedResumeId]);
 
+
+  const handleDeleteResume = async (resumeId: string) => {
+    if (!window.confirm("Are you sure you want to delete this resume? This action cannot be undone.")) {
+      return;
+    }
+
+    try {
+      await API.delete(`/resume/${resumeId}`);
+      setResumes((prev) => prev.filter((item) => item._id !== resumeId));
+      if (selectedResumeId === resumeId) {
+        setSelectedResumeId("");
+        setSelectedAnalysis(null);
+      }
+    } catch (error: any) {
+      alert(error.response?.data?.message || "Failed to delete the resume. Please try again.");
+    }
+  }
+
+  const handleEditResume = (resume: ResumeHistoryItem) => {
+    setEditingResume(resume);
+    setIsRenamePopupOpen(true);
+  };
+
+  const handleRenameSubmit = async (newName: string) => {
+    if (!editingResume?._id) {
+      alert("No resume selected for editing.");
+      return;
+    }
+
+    try {
+      setRenameLoading(true);
+      const res = await API.put(`/resume/${editingResume._id}`, {
+        originalFileName: newName,
+      });
+
+      const updatedResume = res.data.data as ResumeHistoryItem;
+
+      setResumes((prev) =>
+        prev.map((item) =>
+          item._id === editingResume._id
+            ? {
+                ...item,
+                originalFileName: updatedResume.originalFileName,
+                updatedAt: updatedResume.updatedAt,
+              }
+            : item
+        )
+      );
+
+      setEditingResume((prev) =>
+        prev
+          ? {
+              ...prev,
+              originalFileName: updatedResume.originalFileName,
+              updatedAt: updatedResume.updatedAt,
+            }
+          : prev
+      );
+      setIsRenamePopupOpen(false);
+    } catch (error: any) {
+      alert(error.response?.data?.message || "Failed to update the resume. Please try again.");
+    } finally {
+      setRenameLoading(false);
+    }
+  };
+
   const selectedResume = resumes.find((resume) => resume._id === selectedResumeId) || null;
 
   return (
@@ -143,7 +217,25 @@ const ResumeHistory = () => {
                   >
                     <div className="history-item-top">
                       <div>
-                        <div className="history-item-title">{resume.originalFileName}</div>
+                        <div className="history-item-title">
+                          {resume.originalFileName}
+                          <MdDelete
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              handleDeleteResume(resume._id);
+                            }}
+                            size={28}
+                            className="cursor-pointer"
+                          />
+                          <MdEditDocument
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              handleEditResume(resume);
+                            }}
+                            size={28}
+                            className="cursor-pointer"
+                          />
+                        </div>
                         <div className="history-item-meta">Uploaded {formatDate(resume.createdAt)}</div>
                       </div>
                       <span className={`history-status ${resume.latestAnalysis ? "scored" : "pending"}`}>
@@ -233,6 +325,20 @@ const ResumeHistory = () => {
             </section>
           </div>
         </div>
+
+        {isRenamePopupOpen && editingResume ? (
+          <RenamePopup
+            initialName={editingResume.originalFileName}
+            isSubmitting={renameLoading}
+            onClose={() => {
+              if (!renameLoading) {
+                setIsRenamePopupOpen(false);
+                setEditingResume(null);
+              }
+            }}
+            onSubmit={handleRenameSubmit}
+          />
+        ) : null}
       </div>
     </>
   );

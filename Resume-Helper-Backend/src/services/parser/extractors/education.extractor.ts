@@ -1,12 +1,4 @@
-// education.extractor.ts
+import { parserData, parserHelpers } from "../parserData.js";
 
-const DEGREE_KEYWORDS = [
-  "bca", "b.tech", "bachelor",
-  "hsc", "ssc", "mca", "master"
-];
-
-export const extractEducation = (text: string): string[] => {
-  const lower = text.toLowerCase();
-
-  return DEGREE_KEYWORDS.filter(degree => lower.includes(degree));
-};
+export const extractEducation = (text: string): string[] =>
+  parserHelpers.findKeywordsInText(text, parserData.educationKeywords);

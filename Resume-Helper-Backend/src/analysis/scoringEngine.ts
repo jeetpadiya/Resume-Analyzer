@@ -1,5 +1,8 @@
 // src/analysis/scoringEngine.ts
 
+import { extractSkills } from "../services/parser/extractors/skills.extractor.js";
+import { parserData, parserHelpers } from "../services/parser/parserData.js";
+
 type Resume = {
   skills: string[];
   experience: {
@@ -25,60 +28,25 @@ const WEIGHTS = {
 // ---------- NORMALIZATION (CRITICAL FIX) ----------
 
 // normalize everything consistently
-const clean = (text: string) =>
-  text
-    .toLowerCase()
-    .replace(/\.?js/g, "")       // react.js → react
-    .replace(/[^a-z0-9\s]/g, " ") // remove symbols
-    .replace(/\s+/g, " ")
-    .trim();
+const clean = (text: string) => parserHelpers.normalizeToken(text);
 
 const tokenize = (text: string): string[] =>
   clean(text).split(" ").filter(Boolean);
-
-// normalize skill like "react js", "node-js"
-
-const SKILL_ALIASES: Record<string, string> = {
-  "reactjs": "react",
-  "nodejs": "node",
-  "node.js": "node",
-  "rest api": "restapi",
-  "mongo": "mongodb"
-}
-
-// const cleanSkill = (skill: string) =>
-//   clean(skill).replace(/\s/g, ""); // "react js" → "react"
-
- const normalizeSkill = (skill: string) => {
-  const cleaned = clean(skill).replace(/\s/g, "");
-  return SKILL_ALIASES[cleaned] || cleaned;
-};
+const normalizeSkill = (skill: string) => parserHelpers.normalizeSkill(skill);
 
 
 // ---------- 1. KEYWORD SCORE ----------
 
-  const STOP_WORDS = new Set([
-  "and", "or", "with", "the", "a", "an",
-  "developer", "engineer", "experience",
-  "looking", "for", "role", "in"
-]);
+const STOP_WORDS = new Set(parserData.stopWords.map((word) => clean(word)));
 
 const getKeywordScore = (resume: Resume, jobDesc: string) => {
   if (!jobDesc) return 0;
 
-  const resumeTokens = new Set([
-    ...tokenize(resume.rawText),
-    ...resume.skills.map(normalizeSkill),
-  ]);
+  const resumeTokens = new Set([...tokenize(resume.rawText), ...resume.skills.map(normalizeSkill)]);
 
-//   const STOP_WORDS = new Set([
-//   "and", "or", "with", "the", "a", "an",
-//   "developer", "engineer", "experience",
-//   "looking", "for", "role", "in"
-// ]);
-
-  const jobTokens = tokenize(jobDesc).filter(
-  word => !STOP_WORDS.has(word) && word.length > 2).map(normalizeSkill);
+  const jobTokens = tokenize(jobDesc)
+    .filter((word) => !STOP_WORDS.has(word) && word.length > 2)
+    .map(normalizeSkill);
 
   let match = 0;
 
@@ -96,21 +64,16 @@ const getKeywordScore = (resume: Resume, jobDesc: string) => {
 const getSkillScore = (resume: Resume, jobDesc: string) => {
   if (!jobDesc) return 0;
 
-  const resumeSkills = new Set(
-    resume.skills.map(normalizeSkill)
-  );
-
- const jobTokens = tokenize(jobDesc)
-  .filter(word => !STOP_WORDS.has(word) && word.length > 2)
-  .map(normalizeSkill);
+  const resumeSkills = new Set(resume.skills.map(normalizeSkill));
+  const jobSkills = extractSkills(jobDesc).map(normalizeSkill);
 
   let match = 0;
 
-  jobTokens.forEach(skill => {
+  jobSkills.forEach((skill) => {
     if (resumeSkills.has(skill)) match++;
   });
 
-  const ratio = match / (jobTokens.length || 1);
+  const ratio = match / (jobSkills.length || 1);
 
   return Math.min(ratio * WEIGHTS.SKILLS, WEIGHTS.SKILLS);
 };
@@ -207,13 +170,8 @@ export const calculateATSScore = (resume: Resume, jobDesc: string) => {
 
   // 🔥 missing skills (important)
   const resumeSkills = new Set(resume.skills.map(normalizeSkill));
-  const jobTokens = tokenize(jobDesc)
-  .filter(word => !STOP_WORDS.has(word) && word.length > 2)
-  .map(normalizeSkill);
-
-  const missingSkills = jobTokens.filter(
-    skill => !resumeSkills.has(skill)
-  );
+  const jobSkills = parserHelpers.unique(extractSkills(jobDesc).map(normalizeSkill));
+  const missingSkills = jobSkills.filter((skill) => !resumeSkills.has(skill));
 
   const suggestions: string[] = [];
 

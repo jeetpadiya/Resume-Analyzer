@@ -1,0 +1,7 @@
+{
+  "skills": ["skills", "technical skills", "core competencies", "tech stack"],
+  "experience": ["experience", "work experience", "professional experience", "employment history"],
+  "education": ["education", "academic background", "qualifications"],
+  "projects": ["projects", "personal projects", "academic projects"],
+  "certifications": ["certifications", "licenses", "credentials"]
+}

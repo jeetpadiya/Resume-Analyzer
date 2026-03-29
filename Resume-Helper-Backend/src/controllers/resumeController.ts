@@ -95,3 +95,62 @@ export const getResumeHistory = async (req: any, res: any) => {
     res.status(500).json({ message: err.message });
   }
 };
+export const resumeDelete = async (req: any, res: any) => {
+  try {
+    const resumeId = req.params.resumeId;
+
+    if (!req.user?.id) {
+      return res.status(401).json({ message: "Invalid token payload" });
+    }
+
+    const deletedResume = await Resume.findOneAndDelete({
+      _id: resumeId,
+      user: req.user.id,
+    });
+
+    if (!deletedResume) {
+      return res.status(404).json({ message: "Resume not found" });
+    }
+
+    return res.json({
+      success: true,
+      message: "Resume deleted successfully",
+    });
+  } catch (err: any) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+export const ResumeEdit = async (req:any, res:any)=>{
+    try {
+      const resumeId = req.params.resumeId;
+      const { originalFileName } = req.body;
+  
+      if (!req.user?.id) {
+        return res.status(401).json({ message: "Invalid token payload" });
+      }
+
+      const updateResume = await Resume.findOneAndUpdate(
+        {
+          _id: resumeId,
+          user: req.user.id,
+        },
+        {
+          originalFileName
+        },
+        { new: true }
+      );
+  
+      if (!updateResume) {
+        return res.status(404).json({ message: "Resume not found" });
+      }
+  
+      return res.json({
+        success: true,
+        data: updateResume,
+      });
+    }
+    catch (err:any) {      
+      return res.status(500).json({ message: err.message });
+    }
+}

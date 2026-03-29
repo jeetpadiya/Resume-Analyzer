@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "tsc && node scripts/copy-parser-data.mjs",
     "start": "node dist/server.js"
   },
   "dependencies": {

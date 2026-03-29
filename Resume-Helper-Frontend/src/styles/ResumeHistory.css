@@ -351,6 +351,156 @@
   color: #eaa7c6;
 }
 
+.history-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(5, 4, 12, 0.74);
+  backdrop-filter: blur(14px);
+}
+
+.history-modal {
+  position: relative;
+  overflow: hidden;
+  width: min(100%, 560px);
+  padding: 28px;
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03)),
+    rgba(17, 14, 32, 0.96);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow:
+    0 28px 80px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.history-modal-glow {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(50px);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.history-modal-glow-1 {
+  width: 180px;
+  height: 180px;
+  top: -60px;
+  right: -40px;
+  background: rgba(108,71,255,0.35);
+}
+
+.history-modal-glow-2 {
+  width: 140px;
+  height: 140px;
+  left: -30px;
+  bottom: -50px;
+  background: rgba(232,93,154,0.24);
+}
+
+.history-modal-eyebrow {
+  position: relative;
+  margin: 0 0 10px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #a48fff;
+}
+
+.history-modal-title {
+  position: relative;
+  margin: 0;
+  color: #f0eeff;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 38px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.history-modal-copy {
+  position: relative;
+  margin: 12px 0 20px;
+  color: rgba(255,255,255,0.52);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.history-modal-input {
+  position: relative;
+  width: 100%;
+  padding: 15px 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: #f0eeff;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.history-modal-input::placeholder {
+  color: rgba(255,255,255,0.28);
+}
+
+.history-modal-input:focus {
+  border-color: rgba(164,143,255,0.5);
+  background: rgba(108,71,255,0.08);
+  box-shadow: 0 0 0 4px rgba(108,71,255,0.12);
+}
+
+.history-modal-actions {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.history-modal-button {
+  min-width: 112px;
+  border-radius: 14px;
+  padding: 12px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, opacity 0.18s ease;
+}
+
+.history-modal-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.history-modal-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.history-modal-button-secondary {
+  color: rgba(255,255,255,0.82);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.history-modal-button-secondary:hover:not(:disabled) {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.16);
+}
+
+.history-modal-button-primary {
+  color: #f7f4ff;
+  background: linear-gradient(135deg, #6c47ff, #9c6dff);
+  border: 1px solid rgba(164,143,255,0.4);
+  box-shadow: 0 12px 26px rgba(108,71,255,0.24);
+}
+
+.history-modal-button-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #7a57ff, #ad82ff);
+}
+
 @media (max-width: 980px) {
   .history-layout {
     grid-template-columns: 1fr;
@@ -369,6 +519,18 @@
   .history-panel,
   .history-card {
     padding: 18px;
+  }
+
+  .history-modal-backdrop {
+    padding: 16px;
+  }
+
+  .history-modal {
+    padding: 22px 18px;
+  }
+
+  .history-modal-title {
+    font-size: 32px;
   }
 
   .history-detail-head,
