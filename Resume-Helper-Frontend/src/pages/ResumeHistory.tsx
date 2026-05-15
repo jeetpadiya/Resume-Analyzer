@@ -6,6 +6,7 @@ import "../styles/ResumeHistory.css";
 import { MdDelete } from "react-icons/md";
 import { MdEditDocument } from "react-icons/md";
 import RenamePopup from "../Popups/RenamePopup";
+import { toast } from "react-toastify";
 
 
 
@@ -59,6 +60,7 @@ const ResumeHistory = () => {
 
   useEffect(() => {
     setMounted(true);
+    console.log("Mounted ResumeHistory component");
   }, []);
 
   useEffect(() => {
@@ -122,7 +124,7 @@ const ResumeHistory = () => {
         setSelectedAnalysis(null);
       }
     } catch (error: any) {
-      alert(error.response?.data?.message || "Failed to delete the resume. Please try again.");
+      toast.error(error.response?.data?.message || "Failed to delete the resume. Please try again.");
     }
   }
 
@@ -133,7 +135,7 @@ const ResumeHistory = () => {
 
   const handleRenameSubmit = async (newName: string) => {
     if (!editingResume?._id) {
-      alert("No resume selected for editing.");
+      toast.warn("No resume selected for editing.");
       return;
     }
 
@@ -167,8 +169,9 @@ const ResumeHistory = () => {
           : prev
       );
       setIsRenamePopupOpen(false);
+      toast.success("Resume renamed successfully.");
     } catch (error: any) {
-      alert(error.response?.data?.message || "Failed to update the resume. Please try again.");
+      toast.error(error.response?.data?.message || "Failed to update the resume. Please try again.");
     } finally {
       setRenameLoading(false);
     }
@@ -272,7 +275,7 @@ const ResumeHistory = () => {
                       <div className="history-score-wrap">
                         <ScoreRing score={selectedAnalysis.score} />
                         <span className={`history-tag ${selectedAnalysis.score >= 75 ? "strong" : selectedAnalysis.score >= 50 ? "good" : "weak"}`}>
-                          {selectedAnalysis.lable}
+                          {selectedAnalysis.label}
                         </span>
                       </div>
                     ) : null}

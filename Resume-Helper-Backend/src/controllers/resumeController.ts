@@ -1,6 +1,7 @@
 import Resume from "../models/resume_model.js";
 import Analysis from "../models/analyis_model.js";
-import { parseResumeFile } from "../services/parser/parser_service.js"
+import { parseResumeFile } from "../services/parser/parser_service.js";
+import { uploadToCloudinary } from "../config/cloudinary.js";
 
 
 export const uploadResume = async (req: any, res: any) => {
@@ -20,9 +21,11 @@ export const uploadResume = async (req: any, res: any) => {
       file.mimetype
     );
 
+    const fileUrl = await uploadToCloudinary(file.buffer, file.originalname);
+
     const resume = await Resume.create({
       user: req.user.id,
-      fileUrl: "local-file", // placeholder
+      fileUrl: fileUrl,
       originalFileName: file.originalname,
       parsedData,
       status: "parsed",
@@ -79,7 +82,7 @@ export const getResumeHistory = async (req: any, res: any) => {
           ? {
               _id: latestAnalysis._id,
               score: latestAnalysis.score,
-              lable: latestAnalysis.lable,
+              label: latestAnalysis.label,
               breakdown: latestAnalysis.breakdown,
               createdAt: latestAnalysis.createdAt,
             }

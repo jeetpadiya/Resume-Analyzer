@@ -8,7 +8,7 @@ const analysisSchema = new mongoose.Schema({
         required: true
     },
     score:{type:Number,min:0,max:100},
-    lable: String, // e.g. "Excellent", "Good", "Needs Improvement"
+    label: String, // e.g. "Excellent", "Good", "Needs Improvement"
 
     breakdown: {
       keywordScore: Number,

@@ -8,7 +8,7 @@ type AuthTokenPayload = {
 };
 
 export const authMiddleware = (req:any,res:any,next:any)=>{
-    const token = req.header('Authorization')?.replace('Bearer ', '');
+        const token = req.header('Authorization')?.replace('Bearer ', '');
 
     if(!token){
         return res.status(401).json({ message: "No token, authorization denied" });

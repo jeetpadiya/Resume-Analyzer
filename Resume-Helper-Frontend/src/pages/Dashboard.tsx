@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../service/api";
 import type { AnalysisResult } from "../type/types";
 import Navigation from "../components/Navigation";
+import { toast } from "react-toastify";
 import "../styles/Dashboard.css";
 
 const ScoreRing = ({ score }: { score: number }) => {
@@ -46,10 +48,13 @@ const Dashboard = () => {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [resume, setResume] = useState<string>("");
   const [uploadStatus, setUploadStatus] = useState<"idle" | "success" | "error">("idle");
-  const [mounted, setMounted] = useState(false);
+
+  const navigate = useNavigate();
+
+  // const [mounted, setMounted] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => { setMounted(true); }, []);
+  // useEffect(() => { setMounted(true); }, []);
 
   const handleUpload = async () => {
     if (!file) return;
@@ -61,8 +66,9 @@ const Dashboard = () => {
       const res = await API.post("/resume/upload", formData);
       setResume(res.data.data._id);
       setUploadStatus("success");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error uploading file:", error);
+      toast.error(error.response?.data?.message || "Error uploading file");
       setUploadStatus("error");
     } finally {
       setUploadLoading(false);
@@ -76,11 +82,22 @@ const Dashboard = () => {
       setResult(null);
       const res = await API.post("/resume/analyze", { resumeId: resume, jobDescription });
       setResult(res.data.data);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error analyzing resume:", error);
+      toast.error(error.response?.data?.message || "Error analyzing resume");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGenerateCoverLetter = () => {
+    if (!resume || !jobDescription) return;
+    navigate(`/ai-features/${resume}`, { state: { jobDescription, autoRun: 'cover-letter' } });
+  };
+
+  const handleImproveResume = () => {
+    if (!resume || !jobDescription) return;
+    navigate(`/ai-features/${resume}`, { state: { jobDescription, autoRun: 'rewrite' } });
   };
 
 
@@ -106,7 +123,7 @@ const Dashboard = () => {
         <div className="dash-blob dash-blob-2" />
         <div className="dash-grid" />
 
-        <div className={`dash-content ${mounted ? "visible" : ""}`}>
+        <div className="dash-content visible" >
           {/* Header */}
           <div className="dash-header">
             <h1 className="dash-title">Resume Analyzer</h1>
@@ -239,7 +256,7 @@ const Dashboard = () => {
                   <div>
                     <span className={`dash-tag ${result.score >= 75 ? "tag-strong" : result.score >= 50 ? "tag-good" : "tag-weak"}`}>
                       <span style={{ width: 6, height: 6, borderRadius: "50%", background: "currentColor", display: "inline-block" }} />
-                      {result.lable}
+                      {result.label}
                     </span>
                   </div>
                 </div>
@@ -304,6 +321,24 @@ const Dashboard = () => {
                   </div>
                 </div>
               )}
+
+              {/* Advanced AI Features */}
+              <div className="dash-card">
+                <p className="dash-card-title">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                  </svg>
+                  Advanced AI Features
+                </p>
+                <div className="dash-btn-row">
+                  <button className="dash-btn dash-btn-analyze" onClick={handleGenerateCoverLetter}>
+                    Generate Cover Letter
+                  </button>
+                  <button className="dash-btn dash-btn-analyze" onClick={handleImproveResume}>
+                    Rewrite Resume Bullets
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>

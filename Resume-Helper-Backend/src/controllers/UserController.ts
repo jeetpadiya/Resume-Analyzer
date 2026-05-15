@@ -2,7 +2,7 @@ import UserSchema from '../models/UserModel.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-import { sendPasswordResetEmail } from '../services/email/mailer.js';
+import { EmailDeliveryError, sendPasswordResetEmail } from '../services/email/mailer.js';
 
 const signUserToken = (userId: string, email: string) => {
     if (!process.env.SECRET_KEY) {
@@ -127,7 +127,22 @@ const forgotPassword = async (req: any, res: any) => {
         const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
         const resetUrl = `${frontendUrl.replace(/\/$/, "")}/reset-password/${resetToken}`;
 
-        await sendPasswordResetEmail(existingUser.email, resetUrl);
+        try {
+            await sendPasswordResetEmail(existingUser.email, resetUrl);
+        } catch (error) {
+            existingUser.passwordResetToken = null;
+            existingUser.passwordResetExpires = null;
+            await existingUser.save();
+
+            if (error instanceof EmailDeliveryError) {
+                return res.status(503).json({
+                    success: false,
+                    message: error.message
+                });
+            }
+
+            throw error;
+        }
 
         res.status(200).json({
             success: true,

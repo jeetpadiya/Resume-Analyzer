@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume-Helper Project Aligned Report</title>
+  <style>
+    body {
+      font-family: "Times New Roman", serif;
+      margin: 1in;
+      color: #111;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+    h1, h2, h3 {
+      color: #000;
+      margin-top: 24px;
+      margin-bottom: 10px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      text-transform: uppercase;
+    }
+    h2 {
+      font-size: 20px;
+      border-bottom: 1px solid #999;
+      padding-bottom: 4px;
+    }
+    h3 {
+      font-size: 16px;
+    }
+    p {
+      text-align: justify;
+      margin: 10px 0;
+    }
+    ul {
+      margin: 8px 0 12px 24px;
+    }
+    li {
+      margin: 4px 0;
+    }
+    .center {
+      text-align: center;
+    }
+    .toc-item {
+      margin: 4px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      margin-bottom: 12px;
+    }
+    th, td {
+      border: 1px solid #444;
+      padding: 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .diagram {
+      border: 1px solid #444;
+      padding: 12px;
+      white-space: pre-line;
+      margin: 10px 0;
+      font-family: "Courier New", monospace;
+      background: #fafafa;
+    }
+  </style>
+</head>
+<body>
+  <h1>Resume-Helper Project Report</h1>
+  <p class="center"><strong>Project-Aligned Version Based on Source Code</strong></p>
+
+  <h2>Table of Contents</h2>
+  <div class="toc-item">1. Introduction</div>
+  <div class="toc-item">1.1 Project Profile</div>
+  <div class="toc-item">1.2 Project Abstract</div>
+  <div class="toc-item">2. Analysis</div>
+  <div class="toc-item">2.1 Requirement Analysis</div>
+  <div class="toc-item">2.2 Current System</div>
+  <div class="toc-item">2.3 Proposed System</div>
+  <div class="toc-item">2.4 Feasibility Study</div>
+  <div class="toc-item">3. About Back-End</div>
+  <div class="toc-item">4. About Front-End</div>
+  <div class="toc-item">5. About Other Tools Used</div>
+  <div class="toc-item">6. Software Requirement &amp; Specification</div>
+  <div class="toc-item">6.1 Introduction</div>
+  <div class="toc-item">6.2 Functional Requirement</div>
+  <div class="toc-item">6.3 Hardware/Software Requirement</div>
+  <div class="toc-item">7. Data Dictionary</div>
+  <div class="toc-item">8. E-R Diagram</div>
+  <div class="toc-item">9. Data Flow Diagram</div>
+  <div class="toc-item">9.1 Level 0 DFD</div>
+  <div class="toc-item">9.2 Level 1 DFD</div>
+  <div class="toc-item">9.3 Level 2 DFD</div>
+  <div class="toc-item">10. Screen Layouts</div>
+  <div class="toc-item">11. Source Code</div>
+  <div class="toc-item">12. Reference</div>
+
+  <h2>1. Introduction</h2>
+
+  <h3>1.1 Project Profile</h3>
+  <p><strong>Project Title:</strong> Resume-Helper</p>
+  <p><strong>Project Type:</strong> Web Application</p>
+  <p><strong>Project Category:</strong> Resume Analysis and ATS Scoring System</p>
+  <p><strong>Target Users:</strong> Students, freshers, job seekers, and recruiters who want to check resume quality against a job description.</p>
+  <p>Resume-Helper is a web-based application that allows users to upload a resume in PDF or DOCX format and analyze it against a job description. The system extracts key information from the resume, calculates an ATS-style score, identifies missing skills, and gives improvement suggestions. It also provides authentication, resume history, rename and delete operations, and password reset functionality.</p>
+
+  <h3>1.2 Project Abstract</h3>
+  <p>The Resume-Helper project is designed to assist users in evaluating resumes more effectively. In the traditional process, candidates manually compare their resume with job descriptions and often fail to identify missing skills or weak sections. The proposed system automates this process by parsing uploaded resumes, extracting structured data such as skills, education, and experience, and then matching that information with a job description to generate an ATS-style score.</p>
+  <p>The system helps users understand how well their resume fits a target role and highlights areas for improvement. It also maintains a resume history so previous uploads and analyses can be reviewed. This makes the application useful for placement preparation, internships, and job applications.</p>
+
+  <h2>2. Analysis</h2>
+
+  <h3>2.1 Requirement Analysis</h3>
+  <p>Requirement analysis helps identify what the system should do and what users expect from it.</p>
+  <p><strong>User Requirements:</strong></p>
+  <ul>
+    <li>User should be able to register and log in.</li>
+    <li>User should be able to upload resume files in PDF or DOCX format.</li>
+    <li>User should be able to provide a job description.</li>
+    <li>User should be able to analyze the uploaded resume.</li>
+    <li>User should be able to view ATS score, missing skills, suggestions, and score breakdown.</li>
+    <li>User should be able to access resume history.</li>
+    <li>User should be able to rename or delete stored resumes.</li>
+    <li>User should be able to reset password if forgotten.</li>
+  </ul>
+  <p><strong>System Requirements:</strong></p>
+  <ul>
+    <li>The system must validate authentication and protect private routes.</li>
+    <li>The system must accept only supported file formats.</li>
+    <li>The system must parse resume text and extract structured fields.</li>
+    <li>The system must compute ATS score based on defined scoring logic.</li>
+    <li>The system must store users, resumes, and analysis records in the database.</li>
+    <li>The system must provide a responsive and user-friendly interface.</li>
+  </ul>
+
+  <h3>2.2 Current System</h3>
+  <p>In the current manual approach, users compare resumes and job descriptions by themselves. This process is slow, inaccurate, and highly dependent on personal judgment. Many students and job seekers do not know whether their resumes match the required skills, keywords, or experience expected in a job post.</p>
+  <p><strong>Limitations of the Current System:</strong></p>
+  <ul>
+    <li>Manual resume checking is time-consuming.</li>
+    <li>Users may overlook missing keywords and skills.</li>
+    <li>No automatic score or quality feedback is available.</li>
+    <li>There is no structured resume analysis history.</li>
+    <li>Freshers may not know how to improve weak resumes.</li>
+  </ul>
+
+  <h3>2.3 Proposed System</h3>
+  <p>The proposed system, Resume-Helper, provides automated resume analysis. Users upload a resume, enter a job description, and receive an ATS-style score. The system extracts skills, education, and experience from the resume and compares them with the job description. It then shows missing skills, suggestions, and a category-wise breakdown.</p>
+  <p><strong>Advantages of the Proposed System:</strong></p>
+  <ul>
+    <li>Automates resume evaluation.</li>
+    <li>Helps identify missing skills and weak areas.</li>
+    <li>Provides resume score and analysis breakdown.</li>
+    <li>Stores previous resume records and results.</li>
+    <li>Improves the resume revision process for users.</li>
+  </ul>
+
+  <h3>2.4 Feasibility Study</h3>
+  <p><strong>Technical Feasibility:</strong> The project is technically feasible because it is implemented using React, TypeScript, Node.js, Express, MongoDB, Mongoose, and resume parsing libraries.</p>
+  <p><strong>Economic Feasibility:</strong> The project is economical because it uses open-source tools and standard development resources.</p>
+  <p><strong>Operational Feasibility:</strong> The system is practical because users can easily interact with it through a web interface.</p>
+  <p><strong>Schedule Feasibility:</strong> The project is suitable for academic development because the modules are clearly separated into frontend, backend, parsing, analysis, and authentication.</p>
+
+  <h2>3. About Back-End</h2>
+  <p>The backend is built using Node.js, Express, and TypeScript. It manages authentication, resume upload, resume parsing, ATS analysis, history retrieval, rename and delete operations, and password reset logic. MongoDB is used as the database, and Mongoose is used to define and manage schemas.</p>
+  <p><strong>Main Back-End Modules:</strong></p>
+  <ul>
+    <li>User authentication controller for register, login, forgot password, and reset password.</li>
+    <li>Resume controller for upload, history listing, rename, and delete.</li>
+    <li>Analysis controller for ATS scoring and retrieving latest analysis.</li>
+    <li>Parser service for reading PDF and DOCX resumes.</li>
+    <li>Scoring engine for keyword score, skill score, experience score, format score, section score, and readability score.</li>
+  </ul>
+
+  <h2>4. About Front-End</h2>
+  <p>The frontend is built with React, TypeScript, Vite, React Router, and Axios. It provides screens for login, sign-up, forgot password, reset password, dashboard, and resume history. The dashboard allows users to upload resumes and analyze them with a job description. The history page displays saved resumes and their latest ATS results.</p>
+  <p><strong>Main Front-End Features:</strong></p>
+  <ul>
+    <li>Authentication UI for login and registration.</li>
+    <li>Protected dashboard route for authorized users.</li>
+    <li>Resume upload interface for PDF and DOCX files.</li>
+    <li>Job description input area.</li>
+    <li>Analysis result display including score ring, missing skills, suggestions, and breakdown.</li>
+    <li>Resume history with rename and delete actions.</li>
+  </ul>
+
+  <h2>5. About Other Tools Used</h2>
+  <ul>
+    <li><strong>MongoDB:</strong> Database for storing users, resumes, and analysis records.</li>
+    <li><strong>Mongoose:</strong> ODM for MongoDB schema management.</li>
+    <li><strong>JWT:</strong> Used for authentication and secure route access.</li>
+    <li><strong>Multer:</strong> Used to upload resume files.</li>
+    <li><strong>pdf-parse:</strong> Used for extracting text from PDF resumes.</li>
+    <li><strong>Mammoth:</strong> Used for extracting text from DOCX resumes.</li>
+    <li><strong>Nodemailer:</strong> Used in the password reset email flow.</li>
+    <li><strong>Axios:</strong> Used on the frontend for API communication.</li>
+    <li><strong>Vite:</strong> Used for frontend development and build tooling.</li>
+  </ul>
+
+  <h2>6. Software Requirement &amp; Specification</h2>
+
+  <h3>6.1 Introduction</h3>
+  <p>Software Requirement Specification defines the expected behavior, functional needs, and technical environment of the Resume-Helper system. The system is developed to support resume upload, parsing, ATS-style evaluation, and secure user-specific history management.</p>
+
+  <h3>6.2 Functional Requirement</h3>
+  <ul>
+    <li>The system shall allow users to register and log in.</li>
+    <li>The system shall allow users to request password reset and set a new password.</li>
+    <li>The system shall allow authenticated users to upload resumes.</li>
+    <li>The system shall parse uploaded resumes and extract structured data.</li>
+    <li>The system shall accept a job description and compute ATS-style score.</li>
+    <li>The system shall display score, label, missing skills, suggestions, and score breakdown.</li>
+    <li>The system shall maintain resume history for each user.</li>
+    <li>The system shall support rename and delete operations for saved resumes.</li>
+  </ul>
+
+  <h3>6.3 Hardware/Software Requirement</h3>
+  <p><strong>Hardware Requirements:</strong></p>
+  <ul>
+    <li>Processor: Intel i3 or above</li>
+    <li>RAM: Minimum 4 GB</li>
+    <li>Hard Disk: Minimum 20 GB free space</li>
+    <li>Internet connection for local development and deployment</li>
+  </ul>
+  <p><strong>Software Requirements:</strong></p>
+  <ul>
+    <li>Operating System: Windows, Linux, or macOS</li>
+    <li>Frontend: React, TypeScript, Vite, Axios, React Router</li>
+    <li>Backend: Node.js, Express, TypeScript</li>
+    <li>Database: MongoDB</li>
+    <li>Libraries: Mongoose, JWT, Multer, Mammoth, pdf-parse, Nodemailer</li>
+    <li>Code Editor: Visual Studio Code or similar IDE</li>
+    <li>Browser: Google Chrome, Firefox, or Edge</li>
+  </ul>
+
+  <h2>7. Data Dictionary</h2>
+  <p>The earlier data dictionary was not fully aligned with this project. The actual system stores data mainly in three collections: User, Resume, and Analysis. The corrected data dictionary is given below.</p>
+
+  <h3>User Table / Collection</h3>
+  <table>
+    <tr>
+      <th>Field Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+    <tr><td>_id</td><td>ObjectId</td><td>Unique identifier for the user</td></tr>
+    <tr><td>username</td><td>String</td><td>Name of the user</td></tr>
+    <tr><td>email</td><td>String</td><td>Unique email address of the user</td></tr>
+    <tr><td>password</td><td>String</td><td>Encrypted password</td></tr>
+    <tr><td>passwordResetToken</td><td>String / Null</td><td>Hashed token used for password reset</td></tr>
+    <tr><td>passwordResetExpires</td><td>Date / Null</td><td>Expiration time for password reset token</td></tr>
+    <tr><td>role</td><td>String</td><td>User role such as user, recruiter, or admin</td></tr>
+    <tr><td>createdAt</td><td>Date</td><td>Record creation timestamp</td></tr>
+    <tr><td>updatedAt</td><td>Date</td><td>Record update timestamp</td></tr>
+  </table>
+
+  <h3>Resume Table / Collection</h3>
+  <table>
+    <tr>
+      <th>Field Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+    <tr><td>_id</td><td>ObjectId</td><td>Unique identifier for the resume</td></tr>
+    <tr><td>user</td><td>ObjectId</td><td>Reference to the user who uploaded the resume</td></tr>
+    <tr><td>fileUrl</td><td>String</td><td>Stored file path or placeholder value</td></tr>
+    <tr><td>originalFileName</td><td>String</td><td>Original name of uploaded resume file</td></tr>
+    <tr><td>parsedData.skills</td><td>Array of String</td><td>Skills extracted from the resume</td></tr>
+    <tr><td>parsedData.education</td><td>Array of String</td><td>Education entries extracted from the resume</td></tr>
+    <tr><td>parsedData.experience</td><td>Array of Object</td><td>Experience entries extracted from the resume</td></tr>
+    <tr><td>parsedData.experience.company</td><td>String</td><td>Company name in an experience record</td></tr>
+    <tr><td>parsedData.experience.role</td><td>String</td><td>Role or job title in an experience record</td></tr>
+    <tr><td>parsedData.experience.duration</td><td>Number</td><td>Experience duration in months</td></tr>
+    <tr><td>parsedData.experience.description</td><td>String</td><td>Description of work experience</td></tr>
+    <tr><td>parsedData.projects</td><td>Array of String</td><td>Project list; currently stored as empty array by parser</td></tr>
+    <tr><td>parsedData.rawText</td><td>String</td><td>Extracted plain text from uploaded resume</td></tr>
+    <tr><td>status</td><td>String</td><td>Resume state: uploaded, parsed, or analyzed</td></tr>
+    <tr><td>createdAt</td><td>Date</td><td>Record creation timestamp</td></tr>
+    <tr><td>updatedAt</td><td>Date</td><td>Record update timestamp</td></tr>
+  </table>
+
+  <h3>Analysis Table / Collection</h3>
+  <table>
+    <tr>
+      <th>Field Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+    <tr><td>_id</td><td>ObjectId</td><td>Unique identifier for analysis record</td></tr>
+    <tr><td>resume</td><td>ObjectId</td><td>Reference to the analyzed resume</td></tr>
+    <tr><td>score</td><td>Number</td><td>Total ATS score between 0 and 100</td></tr>
+    <tr><td>lable</td><td>String</td><td>Score label returned by the backend, such as Strong match</td></tr>
+    <tr><td>breakdown.keywordScore</td><td>Number</td><td>Score for keyword matching</td></tr>
+    <tr><td>breakdown.skillScore</td><td>Number</td><td>Score for skills matching</td></tr>
+    <tr><td>breakdown.experienceScore</td><td>Number</td><td>Score for experience relevance</td></tr>
+    <tr><td>breakdown.formatScore</td><td>Number</td><td>Score for resume format quality</td></tr>
+    <tr><td>breakdown.sectionScore</td><td>Number</td><td>Score for presence of important sections</td></tr>
+    <tr><td>breakdown.readabilityScore</td><td>Number</td><td>Score for readability</td></tr>
+    <tr><td>suggestions</td><td>Array of String</td><td>Improvement suggestions generated by scoring engine</td></tr>
+    <tr><td>jobDescription</td><td>String</td><td>Job description used for analysis</td></tr>
+    <tr><td>missingSkills</td><td>Array of String</td><td>Skills found in job description but missing in resume</td></tr>
+    <tr><td>createdAt</td><td>Date</td><td>Record creation timestamp</td></tr>
+    <tr><td>updatedAt</td><td>Date</td><td>Record update timestamp</td></tr>
+  </table>
+
+  <h2>8. E-R Diagram</h2>
+  <p>The project is mainly centered on three entities: User, Resume, and Analysis.</p>
+  <div class="diagram">User
+ |
+ |----&lt; Resume
+            |
+            |----&lt; Analysis</div>
+  <p><strong>Relationship Explanation:</strong></p>
+  <ul>
+    <li>One user can upload multiple resumes.</li>
+    <li>One resume can have one or more analysis records over time.</li>
+    <li>Analysis belongs to one resume, and resume belongs to one user.</li>
+  </ul>
+
+  <h2>9. Data Flow Diagram</h2>
+
+  <h3>9.1 Level 0 DFD</h3>
+  <div class="diagram">User ---> Resume-Helper System ---> ATS Analysis Result</div>
+
+  <h3>9.2 Level 1 DFD</h3>
+  <div class="diagram">User
+ |
+ |--> Register / Login
+ |--> Upload Resume
+ |--> Enter Job Description
+ |
+ Resume Parsing and Analysis System
+ |
+ |--> ATS Score
+ |--> Missing Skills
+ |--> Suggestions
+ |--> Resume History</div>
+
+  <h3>9.3 Level 2 DFD</h3>
+  <div class="diagram">User
+ |
+ |--> Authentication Request
+ |      |
+ |      |--> Validate User
+ |
+ |--> Upload Resume File
+ |      |
+ |      |--> Parse PDF / DOCX
+ |      |--> Extract Skills / Education / Experience
+ |      |--> Save Resume Record
+ |
+ |--> Submit Job Description
+        |
+        |--> Match Resume with JD
+        |--> Calculate ATS Score
+        |--> Generate Missing Skills and Suggestions
+        |--> Save Analysis Record
+        |--> Display Result</div>
+
+  <h2>10. Screen Layouts</h2>
+  <ul>
+    <li><strong>Login Page:</strong> Allows existing users to sign in using email and password.</li>
+    <li><strong>Sign-Up Page:</strong> Allows new users to create an account using username, email, and password.</li>
+    <li><strong>Forgot Password Page:</strong> Lets users generate a password reset request.</li>
+    <li><strong>Reset Password Page:</strong> Lets users set a new password using the reset token.</li>
+    <li><strong>Dashboard Page:</strong> Main page for uploading resumes and entering a job description for analysis.</li>
+    <li><strong>Resume History Page:</strong> Displays previously uploaded resumes and latest analysis results with rename and delete options.</li>
+  </ul>
+
+  <h2>11. Source Code</h2>
+  <p>The project source code is divided into two major parts:</p>
+  <ul>
+    <li><strong>Frontend:</strong> React application with pages for login, sign-up, dashboard, history, and password recovery.</li>
+    <li><strong>Backend:</strong> Express API with routes for authentication, resume upload, analysis, and history management.</li>
+  </ul>
+  <p>Important backend files include server setup, controllers, models, parser service, and scoring engine. Important frontend files include router setup, dashboard page, resume history page, auth context, and API service.</p>
+
+  <h2>12. Reference</h2>
+  <ul>
+    <li>React documentation</li>
+    <li>TypeScript documentation</li>
+    <li>Node.js documentation</li>
+    <li>Express.js documentation</li>
+    <li>MongoDB documentation</li>
+    <li>Mongoose documentation</li>
+    <li>JWT documentation</li>
+    <li>Multer documentation</li>
+    <li>Mammoth documentation</li>
+    <li>pdf-parse documentation</li>
+    <li>Nodemailer documentation</li>
+  </ul>
+</body>
+</html>

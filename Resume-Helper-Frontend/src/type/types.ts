@@ -1,6 +1,6 @@
 export interface AnalysisResult {
     score:number;
-    lable:string;
+    label:string;
     missingSkills?:string[];
     suggestions?:string[];
     breakdown?:Record<string, number>;
@@ -16,7 +16,7 @@ export interface ResumeHistoryItem {
     latestAnalysis: {
         _id: string;
         score: number;
-        lable: string;
+        label: string;
         breakdown?: Record<string, number>;
         createdAt: string;
     } | null;

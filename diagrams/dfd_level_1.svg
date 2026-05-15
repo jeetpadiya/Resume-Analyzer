@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="980" viewBox="0 0 1500 980">
+  <defs>
+    <style>
+      .title { font: 700 34px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 18px 'Segoe UI', Arial, sans-serif; fill: #475569; }
+      .proc { font: 700 22px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .small { font: 500 16px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .flow { font: 700 17px 'Segoe UI', Arial, sans-serif; fill: #1e293b; }
+      .store { font: 700 20px 'Segoe UI', Arial, sans-serif; fill: #1e293b; }
+    </style>
+    <linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f5f3ff"/>
+    </linearGradient>
+    <filter id="shadow1" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#94a3b8" flood-opacity="0.18"/>
+    </filter>
+    <marker id="arrow1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6d28d9"/>
+    </marker>
+  </defs>
+
+  <rect width="1500" height="980" fill="url(#bg1)"/>
+  <text x="750" y="70" text-anchor="middle" class="title">Data Flow Diagram - Level 1</text>
+  <text x="750" y="104" text-anchor="middle" class="subtitle">Major processes and data stores in the Resume-Helper system</text>
+
+  <g filter="url(#shadow1)">
+    <rect x="70" y="390" width="220" height="170" rx="24" fill="#ffffff" stroke="#93c5fd" stroke-width="2"/>
+    <text x="180" y="462" text-anchor="middle" class="proc">USER</text>
+    <text x="180" y="500" text-anchor="middle" class="small">Uploads resume</text>
+    <text x="180" y="528" text-anchor="middle" class="small">Submits job description</text>
+  </g>
+
+  <g filter="url(#shadow1)">
+    <rect x="360" y="120" width="270" height="140" rx="26" fill="#ffffff" stroke="#5eead4" stroke-width="2"/>
+    <text x="495" y="178" text-anchor="middle" class="proc">1.0 Authenticate User</text>
+    <text x="495" y="214" text-anchor="middle" class="small">Register / login / reset password</text>
+  </g>
+
+  <g filter="url(#shadow1)">
+    <rect x="360" y="350" width="270" height="140" rx="26" fill="#ffffff" stroke="#5eead4" stroke-width="2"/>
+    <text x="495" y="408" text-anchor="middle" class="proc">2.0 Upload Resume</text>
+    <text x="495" y="444" text-anchor="middle" class="small">Accept PDF or DOCX file</text>
+  </g>
+
+  <g filter="url(#shadow1)">
+    <rect x="360" y="580" width="270" height="140" rx="26" fill="#ffffff" stroke="#5eead4" stroke-width="2"/>
+    <text x="495" y="638" text-anchor="middle" class="proc">3.0 Parse Resume</text>
+    <text x="495" y="674" text-anchor="middle" class="small">Extract skills, education, experience</text>
+  </g>
+
+  <g filter="url(#shadow1)">
+    <rect x="760" y="350" width="280" height="140" rx="26" fill="#ffffff" stroke="#c4b5fd" stroke-width="2"/>
+    <text x="900" y="408" text-anchor="middle" class="proc">4.0 Analyze Resume</text>
+    <text x="900" y="444" text-anchor="middle" class="small">Match resume against job description</text>
+  </g>
+
+  <g filter="url(#shadow1)">
+    <rect x="760" y="580" width="280" height="140" rx="26" fill="#ffffff" stroke="#c4b5fd" stroke-width="2"/>
+    <text x="900" y="638" text-anchor="middle" class="proc">5.0 Manage History</text>
+    <text x="900" y="674" text-anchor="middle" class="small">View, rename, delete saved resumes</text>
+  </g>
+
+  <g filter="url(#shadow1)">
+    <rect x="1160" y="180" width="240" height="120" rx="18" fill="#ffffff" stroke="#f59e0b" stroke-width="2"/>
+    <line x1="1182" y1="210" x2="1380" y2="210" stroke="#f59e0b" stroke-width="3"/>
+    <line x1="1182" y1="285" x2="1380" y2="285" stroke="#f59e0b" stroke-width="3"/>
+    <text x="1290" y="255" text-anchor="middle" class="store">D1 USER DB</text>
+  </g>
+
+  <g filter="url(#shadow1)">
+    <rect x="1160" y="360" width="240" height="120" rx="18" fill="#ffffff" stroke="#f59e0b" stroke-width="2"/>
+    <line x1="1182" y1="390" x2="1380" y2="390" stroke="#f59e0b" stroke-width="3"/>
+    <line x1="1182" y1="465" x2="1380" y2="465" stroke="#f59e0b" stroke-width="3"/>
+    <text x="1290" y="435" text-anchor="middle" class="store">D2 RESUME DB</text>
+  </g>
+
+  <g filter="url(#shadow1)">
+    <rect x="1160" y="540" width="240" height="120" rx="18" fill="#ffffff" stroke="#f59e0b" stroke-width="2"/>
+    <line x1="1182" y1="570" x2="1380" y2="570" stroke="#f59e0b" stroke-width="3"/>
+    <line x1="1182" y1="645" x2="1380" y2="645" stroke="#f59e0b" stroke-width="3"/>
+    <text x="1290" y="615" text-anchor="middle" class="store">D3 ANALYSIS DB</text>
+  </g>
+
+  <g filter="url(#shadow1)">
+    <rect x="1180" y="760" width="220" height="150" rx="22" fill="#ffffff" stroke="#93c5fd" stroke-width="2"/>
+    <text x="1290" y="820" text-anchor="middle" class="proc">OUTPUT</text>
+    <text x="1290" y="856" text-anchor="middle" class="small">Score, label,</text>
+    <text x="1290" y="882" text-anchor="middle" class="small">missing skills, suggestions</text>
+  </g>
+
+  <line x1="290" y1="440" x2="360" y2="420" stroke="#6d28d9" stroke-width="4" marker-end="url(#arrow1)"/>
+  <text x="314" y="412" class="flow">credentials</text>
+
+  <line x1="290" y1="476" x2="360" y2="420" stroke="#6d28d9" stroke-width="4" marker-end="url(#arrow1)"/>
+  <text x="300" y="458" class="flow">resume file</text>
+
+  <line x1="290" y1="518" x2="360" y2="650" stroke="#6d28d9" stroke-width="4" marker-end="url(#arrow1)"/>
+  <text x="250" y="610" class="flow">job description</text>
+
+  <line x1="495" y1="260" x2="495" y2="350" stroke="#6d28d9" stroke-width="4" marker-end="url(#arrow1)"/>
+  <text x="515" y="314" class="flow">authorized access</text>
+
+  <line x1="495" y1="490" x2="495" y2="580" stroke="#6d28d9" stroke-width="4" marker-end="url(#arrow1)"/>
+  <text x="518" y="542" class="flow">uploaded file</text>
+
+  <line x1="630" y1="650" x2="760" y2="420" stroke="#6d28d9" stroke-width="4" marker-end="url(#arrow1)"/>
+  <text x="680" y="520" class="flow">parsed resume data</text>
+
+  <line x1="630" y1="650" x2="760" y2="650" stroke="#6d28d9" stroke-width="4" marker-end="url(#arrow1)"/>
+  <text x="674" y="634" class="flow">resume record</text>
+
+  <line x1="1040" y1="420" x2="1160" y2="420" stroke="#6d28d9" stroke-width="4" marker-end="url(#arrow1)"/>
+  <text x="1088" y="402" class="flow">save resume</text>
+
+  <line x1="1040" y1="620" x2="1160" y2="600" stroke="#6d28d9" stroke-width="4" marker-end="url(#arrow1)"/>
+  <text x="1084" y="588" class="flow">save analysis</text>
+
+  <line x1="630" y1="190" x2="1160" y2="240" stroke="#6d28d9" stroke-width="4" marker-end="url(#arrow1)"/>
+  <text x="875" y="192" class="flow">user data</text>
+
+  <line x1="1040" y1="410" x2="1180" y2="810" stroke="#6d28d9" stroke-width="4" marker-end="url(#arrow1)"/>
+  <text x="1100" y="672" class="flow">analysis result</text>
+</svg>

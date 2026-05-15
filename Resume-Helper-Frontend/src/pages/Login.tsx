@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import API from "../service/api";
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate,Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import "../styles/login.css";
 
 const Login = () => {
@@ -37,7 +38,9 @@ const Login = () => {
       login(token, user);
       navigate("/");
     } catch (err: any) {
-      setError(err.response?.data?.message || "Login failed");
+      const msg = err.response?.data?.message || "Login failed";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

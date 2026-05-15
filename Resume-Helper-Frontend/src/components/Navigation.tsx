@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate,useLocation } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import "../styles/Navigation.css";
 
 const Navigation = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -32,6 +33,7 @@ const Navigation = () => {
   const navItems = [
     { to: "/dashboard", label: "Analyze" },
     { to: "/history", label: "My Resumes" },
+    { to: "/ai-features", label: "AI Tools" },
   ];
 
   return (
@@ -58,6 +60,11 @@ const Navigation = () => {
               <NavLink
                 key={item.to}
                 to={item.to}
+                onClick={(e)=>{
+                  if(location.pathname === item.to){
+                    e.preventDefault();
+                  }
+                }}
                 className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
               >
                 {item.label}

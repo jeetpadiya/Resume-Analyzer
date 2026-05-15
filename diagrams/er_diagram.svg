@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs>
+    <style>
+      .title { font: 700 34px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 18px 'Segoe UI', Arial, sans-serif; fill: #475569; }
+      .entity-title { font: 700 22px 'Segoe UI', Arial, sans-serif; fill: #ffffff; }
+      .entity-text { font: 500 17px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .rel-text { font: 700 18px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .foot { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #64748b; }
+    </style>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#eef2ff"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f8fafc"/>
+    </linearGradient>
+    <linearGradient id="userHead" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="resumeHead" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f766e"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </linearGradient>
+    <linearGradient id="analysisHead" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#6d28d9"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#94a3b8" flood-opacity="0.18"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="1400" height="900" fill="url(#bg)"/>
+  <circle cx="1280" cy="120" r="110" fill="#dbeafe" opacity="0.55"/>
+  <circle cx="110" cy="780" r="150" fill="#ddd6fe" opacity="0.55"/>
+
+  <text x="700" y="68" text-anchor="middle" class="title">E-R Diagram</text>
+  <text x="700" y="100" text-anchor="middle" class="subtitle">Resume-Helper: core data entities based on the actual codebase</text>
+
+  <g filter="url(#shadow)">
+    <rect x="110" y="180" width="320" height="390" rx="24" fill="url(#panel)" stroke="#bfdbfe" stroke-width="2"/>
+    <rect x="110" y="180" width="320" height="66" rx="24" fill="url(#userHead)"/>
+    <text x="270" y="221" text-anchor="middle" class="entity-title">USER</text>
+    <text x="138" y="282" class="entity-text">• _id : ObjectId</text>
+    <text x="138" y="320" class="entity-text">• username : String</text>
+    <text x="138" y="358" class="entity-text">• email : String</text>
+    <text x="138" y="396" class="entity-text">• password : String</text>
+    <text x="138" y="434" class="entity-text">• passwordResetToken : String/null</text>
+    <text x="138" y="472" class="entity-text">• passwordResetExpires : Date/null</text>
+    <text x="138" y="510" class="entity-text">• role : user/recruiter/admin</text>
+    <text x="138" y="548" class="entity-text">• createdAt / updatedAt</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="540" y="150" width="320" height="450" rx="24" fill="url(#panel)" stroke="#99f6e4" stroke-width="2"/>
+    <rect x="540" y="150" width="320" height="66" rx="24" fill="url(#resumeHead)"/>
+    <text x="700" y="191" text-anchor="middle" class="entity-title">RESUME</text>
+    <text x="568" y="252" class="entity-text">• _id : ObjectId</text>
+    <text x="568" y="290" class="entity-text">• user : ObjectId (ref User)</text>
+    <text x="568" y="328" class="entity-text">• fileUrl : String</text>
+    <text x="568" y="366" class="entity-text">• originalFileName : String</text>
+    <text x="568" y="404" class="entity-text">• parsedData.skills : String[]</text>
+    <text x="568" y="442" class="entity-text">• parsedData.education : String[]</text>
+    <text x="568" y="480" class="entity-text">• parsedData.experience[]</text>
+    <text x="568" y="518" class="entity-text">• parsedData.projects : String[]</text>
+    <text x="568" y="556" class="entity-text">• parsedData.rawText : String</text>
+    <text x="568" y="594" class="entity-text">• status : uploaded/parsed/analyzed</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="970" y="210" width="320" height="390" rx="24" fill="url(#panel)" stroke="#d8b4fe" stroke-width="2"/>
+    <rect x="970" y="210" width="320" height="66" rx="24" fill="url(#analysisHead)"/>
+    <text x="1130" y="251" text-anchor="middle" class="entity-title">ANALYSIS</text>
+    <text x="998" y="312" class="entity-text">• _id : ObjectId</text>
+    <text x="998" y="350" class="entity-text">• resume : ObjectId (ref Resume)</text>
+    <text x="998" y="388" class="entity-text">• score : Number</text>
+    <text x="998" y="426" class="entity-text">• lable : String</text>
+    <text x="998" y="464" class="entity-text">• breakdown : Object</text>
+    <text x="998" y="502" class="entity-text">• suggestions : String[]</text>
+    <text x="998" y="540" class="entity-text">• jobDescription : String</text>
+    <text x="998" y="578" class="entity-text">• missingSkills : String[]</text>
+  </g>
+
+  <line x1="430" y1="375" x2="540" y2="375" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="485" y="347" text-anchor="middle" class="rel-text">1 : N</text>
+  <text x="485" y="405" text-anchor="middle" class="foot">One user can upload many resumes</text>
+
+  <line x1="860" y1="405" x2="970" y2="405" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="915" y="377" text-anchor="middle" class="rel-text">1 : N</text>
+  <text x="915" y="435" text-anchor="middle" class="foot">One resume can have many analyses</text>
+
+  <rect x="360" y="680" width="680" height="120" rx="20" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="700" y="726" text-anchor="middle" class="rel-text">Project Interpretation</text>
+  <text x="700" y="760" text-anchor="middle" class="foot">Users authenticate into the system, upload resumes, and each resume can be analyzed against different job descriptions over time.</text>
+  <text x="700" y="786" text-anchor="middle" class="foot">This structure matches the MongoDB models in the backend: User, Resume, and Analysis.</text>
+</svg>

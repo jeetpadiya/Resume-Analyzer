@@ -36,12 +36,12 @@ export const analyzeResume = async (req: any, res: any) => {
       })),
     };
 
-    const result = calculateATSScore(safeResume, jobDescription || "");
+    const result = await calculateATSScore(safeResume, jobDescription || "");
 
     const analysis = await Analysis.create({
       resume: resumeId,
       score: result.total,
-      lable: result.lableLabel,
+      label: result.scoreLabel,
       breakdown: result.breakdown,
       jobDescription,
       suggestions: result.suggestions,

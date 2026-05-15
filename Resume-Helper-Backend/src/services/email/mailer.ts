@@ -1,3 +1,13 @@
+export class EmailDeliveryError extends Error {
+  statusCode?: number;
+
+  constructor(message: string, statusCode?: number) {
+    super(message);
+    this.name = "EmailDeliveryError";
+    this.statusCode = statusCode;
+  }
+}
+
 const getResendConfig = () => {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM;
@@ -49,6 +59,21 @@ export const sendPasswordResetEmail = async (to: string, resetUrl: string) => {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Resend error: ${response.status} ${errorText}`);
+
+    if (
+      response.status === 403 &&
+      errorText.includes("verify a domain") &&
+      errorText.includes("onboarding@resend.dev")
+    ) {
+      throw new EmailDeliveryError(
+        "Resend is in testing mode. Verify a domain in Resend and use an EMAIL_FROM address on that domain before sending password reset emails to other recipients.",
+        response.status
+      );
+    }
+
+    throw new EmailDeliveryError(
+      `Resend error: ${response.status} ${errorText}`,
+      response.status
+    );
   }
 };

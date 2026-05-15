@@ -1,217 +1,77 @@
-// src/analysis/scoringEngine.ts
-
-import { extractSkills } from "../services/parser/extractors/skills.extractor.js";
-import { parserData, parserHelpers } from "../services/parser/parserData.js";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 type Resume = {
   skills: string[];
-  experience: {
-    company: string;
-    role: string;
-    duration: number;
-    description: string;
-  }[];
+  experience: { company: string; role: string; duration: number; description: string }[];
   education: string[];
   projects: string[];
   rawText: string;
 };
 
-const WEIGHTS = {
-  KEYWORDS: 30,
-  SKILLS: 25,
-  EXPERIENCE: 15,
-  FORMAT: 10,
-  SECTIONS: 10,
-  READABILITY: 10,
-};
+const getGenAI = () => new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
-// ---------- NORMALIZATION (CRITICAL FIX) ----------
+export const calculateATSScore = async (resume: Resume, jobDesc: string) => {
+  if (!jobDesc || jobDesc.trim().length === 0) {
+    return {
+      total: 0,
+      scoreLabel: "Weak match",
+      breakdown: { keywordScore: 0, skillScore: 0, experienceScore: 0, formatScore: 0, sectionScore: 0, readabilityScore: 0 },
+      missingSkills: [],
+      suggestions: ["Please provide a job description for ATS scoring."],
+    };
+  }
 
-// normalize everything consistently
-const clean = (text: string) => parserHelpers.normalizeToken(text);
+  try {
+    const genAI = getGenAI();
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-const tokenize = (text: string): string[] =>
-  clean(text).split(" ").filter(Boolean);
-const normalizeSkill = (skill: string) => parserHelpers.normalizeSkill(skill);
+    const prompt = `
+You are an expert ATS (Applicant Tracking System) scoring engine.
+Evaluate the following resume against the provided job description.
+Return ONLY a valid JSON object matching the following structure. Do NOT include any markdown formatting like \`\`\`json.
 
-
-// ---------- 1. KEYWORD SCORE ----------
-
-const STOP_WORDS = new Set(parserData.stopWords.map((word) => clean(word)));
-
-const getKeywordScore = (resume: Resume, jobDesc: string) => {
-  if (!jobDesc) return 0;
-
-  const resumeTokens = new Set([...tokenize(resume.rawText), ...resume.skills.map(normalizeSkill)]);
-
-  const jobTokens = tokenize(jobDesc)
-    .filter((word) => !STOP_WORDS.has(word) && word.length > 2)
-    .map(normalizeSkill);
-
-  let match = 0;
-
-  jobTokens.forEach(word => {
-    if (resumeTokens.has(word)) match++;
-  });
-
-  const ratio = match / (jobTokens.length || 1);
-
-  return Math.min(ratio * WEIGHTS.KEYWORDS, WEIGHTS.KEYWORDS);
-};
-
-// ---------- 2. SKILL SCORE (FIXED) ----------
-
-const getSkillScore = (resume: Resume, jobDesc: string) => {
-  if (!jobDesc) return 0;
-
-  const resumeSkills = new Set(resume.skills.map(normalizeSkill));
-  const jobSkills = extractSkills(jobDesc).map(normalizeSkill);
-
-  let match = 0;
-
-  jobSkills.forEach((skill) => {
-    if (resumeSkills.has(skill)) match++;
-  });
-
-  const ratio = match / (jobSkills.length || 1);
-
-  return Math.min(ratio * WEIGHTS.SKILLS, WEIGHTS.SKILLS);
-};
-
-// ---------- 3. EXPERIENCE ----------
-
-const getExperienceScore = (resume: Resume, jobDesc: string) => {
-  const totalMonths = resume.experience.reduce(
-    (acc, exp) => acc + (exp.duration || 0),
-    0
-  );
-
-  const years = totalMonths / 12;
-
-  const match = jobDesc.match(/(\d+)\+?\s*years?/i);
-  const expected = match ? parseInt(match[1]) : 3;
-
-  if (years === 0) return 0;
-
-  const ratio = years / expected;
-
-  return Math.min(ratio * WEIGHTS.EXPERIENCE, WEIGHTS.EXPERIENCE);
-};
-
-// ---------- 4. FORMAT ----------
-
-const getFormatScore = (resume: Resume) => {
-  const text = resume.rawText;
-  let score = WEIGHTS.FORMAT;
-
-  if (text.length < 400) score -= 5;
-  if (text.length > 6000) score -= 2;
-
-  return Math.max(score, 0);
-};
-
-// ---------- 5. SECTION ----------
-
-const getSectionScore = (resume: Resume) => {
-  let score = 0;
-
-  if (resume.skills.length) score += 3;
-  if (resume.experience.length) score += 3;
-  if (resume.education.length) score += 2;
-  if (resume.projects.length) score += 2;
-
-  return Math.min(score, WEIGHTS.SECTIONS);
-};
-
-// ---------- 6. READABILITY ----------
-
-const getReadabilityScore = (resume: Resume) => {
-  const text = resume.rawText;
-  let score = 0;
-
-  const words = text.split(/\s+/).length;
-
-  if (words > 100) score += 5;
-  if (text.includes("•") || text.includes("-")) score += 5;
-
-  return Math.min(score, WEIGHTS.READABILITY);
-};
-
-// ---------- 7. SCORE LABEL ----------
-
-const getScoreLabel = (score: number) => {
-  if (score >= 80) return "Strong match";
-  if (score >= 60) return "Good match";
-  if (score >= 40) return "Average match";
-  return "Weak match";
-};
-
-
-// ---------- MAIN ENGINE ----------
-
-export const calculateATSScore = (resume: Resume, jobDesc: string) => {
-  const keywordScore = getKeywordScore(resume, jobDesc);
-  const skillScore = getSkillScore(resume, jobDesc);
-  const experienceScore = getExperienceScore(resume, jobDesc);
-  const formatScore = getFormatScore(resume);
-  const sectionScore = getSectionScore(resume);
-  const readabilityScore = getReadabilityScore(resume);
-
-  const total =
-    keywordScore +
-    skillScore +
-    experienceScore +
-    formatScore +
-    sectionScore +
-    readabilityScore;
-
-      const scoreLabel = getScoreLabel(total);
-
-
-  // 🔥 missing skills (important)
-  const resumeSkills = new Set(resume.skills.map(normalizeSkill));
-  const jobSkills = parserHelpers.unique(extractSkills(jobDesc).map(normalizeSkill));
-  const missingSkills = jobSkills.filter((skill) => !resumeSkills.has(skill));
-
-  const suggestions: string[] = [];
-
-// Skill gaps
-if (skillScore < 15) {
-  suggestions.push("Add more relevant skills from job description");
+{
+  "total": number (0-100),
+  "scoreLabel": string ("Strong match" | "Good match" | "Average match" | "Weak match"),
+  "breakdown": {
+    "keywordScore": number (0-30),
+    "skillScore": number (0-25),
+    "experienceScore": number (0-15),
+    "formatScore": number (0-10),
+    "sectionScore": number (0-10),
+    "readabilityScore": number (0-10)
+  },
+  "missingSkills": [string] (up to 5 most important missing skills),
+  "suggestions": [string] (3-5 highly actionable suggestions to improve the resume for this specific job)
 }
 
-// Missing skills
-missingSkills.slice(0, 5).forEach(skill => {
-  suggestions.push(`Add skill: ${skill}`);
-});
+Resume Data:
+${JSON.stringify({
+  skills: resume.skills,
+  experience: resume.experience,
+  education: resume.education,
+  projects: resume.projects,
+  textSnippet: resume.rawText.substring(0, 3000)
+})}
 
-// Experience
-if (experienceScore < 8) {
-  suggestions.push("Add more experience or highlight projects as experience");
-}
+Job Description:
+${jobDesc}
+`;
 
-// Sections
-if (resume.projects.length === 0) {
-  suggestions.push("Add projects section to strengthen profile");
-}
-
-// Readability
-if (!resume.rawText.includes("•")) {
-  suggestions.push("Use bullet points for better readability");
-}
-
-  return {
-    total: Math.round(total),
-    lableLabel: scoreLabel,
-    breakdown: {
-      keywordScore: Math.round(keywordScore),
-      skillScore: Math.round(skillScore),
-      experienceScore: Math.round(experienceScore),
-      formatScore: Math.round(formatScore),
-      sectionScore: Math.round(sectionScore),
-      readabilityScore: Math.round(readabilityScore),
-    },
-    missingSkills,
-    suggestions,
-  };
+    const result = await model.generateContent(prompt);
+    let jsonStr = result.response.text();
+    jsonStr = jsonStr.replace(/```json\n?|```\n?/g, '').trim();
+    
+    return JSON.parse(jsonStr);
+  } catch (error) {
+    console.error("AI Scoring Error:", error);
+    // Fallback if AI fails
+    return {
+      total: 50,
+      scoreLabel: "Average match",
+      breakdown: { keywordScore: 15, skillScore: 10, experienceScore: 10, formatScore: 5, sectionScore: 5, readabilityScore: 5 },
+      missingSkills: [],
+      suggestions: ["AI scoring service is temporarily unavailable. Please try again later."],
+    };
+  }
 };
